@@ -1,10 +1,13 @@
 # Build stage
-FROM golang:1.23.3-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.23.3-alpine AS builder
+
+ARG TARGETOS
+ARG TARGETARCH
+
 WORKDIR /app
 COPY . .
 
-# Build specifically for linux/amd64
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o endpointlab main.go
+RUN CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o endpointlab main.go
 
 # Run stage
 FROM alpine:3.19
