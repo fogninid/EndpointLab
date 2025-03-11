@@ -1,7 +1,9 @@
 package api
 
 import (
-	_ "endpointlab/docs"
+	"os"
+
+	docs "endpointlab/docs"
 
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
@@ -13,6 +15,13 @@ type Server struct {
 }
 
 func NewServer() (*Server, error) {
+	if host := os.Getenv("SWAG_HOST"); host != "" {
+		docs.SwaggerInfo.Host = host;
+	}
+	if basePath := os.Getenv("SWAG_BASE_PATH"); basePath != "" {
+		docs.SwaggerInfo.BasePath = basePath;
+	}
+
 	router := gin.Default()
 	
 	server := &Server{
